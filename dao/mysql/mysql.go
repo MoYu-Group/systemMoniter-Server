@@ -1,0 +1,44 @@
+package mysql
+
+import (
+	"database/sql"
+	"fmt"
+	"systemMoniter/models"
+
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/spf13/viper"
+	"go.uber.org/zap"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
+)
+
+var db *gorm.DB
+var sqlDB *sql.DB
+
+func Init() (err error) {
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True",
+		viper.GetString("mysql.user"),
+		viper.GetString("mysql.password"),
+		viper.GetString("mysql.host"),
+		viper.GetInt("mysql.port"),
+		viper.GetString("mysql.dbname"),
+	)
+	// 也可以使用MustConnect连接不成功就panic
+
+	db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	//sqlx.Connect("mysql", dsn)
+	if err != nil {
+		zap.L().Error("connect DB failed!", zap.Error(err))
+		return
+	}
+	sqlDB, err := db.DB()
+	sqlDB.SetMaxOpenConns(viper.GetInt("mysql.max_open_conns"))
+	sqlDB.SetMaxIdleConns(viper.GetInt("mysql.max_idle_conns"))
+	return
+}
+
+func Migrate() {
+	db.AutoMigrate(&models.Info{})
+	db.AutoMigrate(&models.Node{})
+	zap.L().Info("Database Migration Completed!")
+}
