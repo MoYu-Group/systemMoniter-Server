@@ -1,2 +1,4 @@
 .exe
 .log
+go.mod
+go.sum

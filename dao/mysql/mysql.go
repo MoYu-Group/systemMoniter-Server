@@ -3,7 +3,7 @@ package mysql
 import (
 	"database/sql"
 	"fmt"
-	"systemMoniter/models"
+	"systemMoniter-Server/models"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/spf13/viper"
@@ -40,5 +40,11 @@ func Init() (err error) {
 func Migrate() {
 	db.AutoMigrate(&models.Info{})
 	db.AutoMigrate(&models.Node{})
+	db.AutoMigrate(&models.User{})
 	zap.L().Info("Database Migration Completed!")
+}
+
+func InsertUser(user *models.User) error {
+	result := db.Create(user)
+	return result.Error
 }

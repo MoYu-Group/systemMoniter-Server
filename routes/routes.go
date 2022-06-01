@@ -1,8 +1,8 @@
 package routes
 
 import (
-	"net/http"
-	"systemMoniter/logger"
+	"systemMoniter-Server/controllers"
+	"systemMoniter-Server/logger"
 
 	"github.com/gin-gonic/gin"
 )
@@ -10,9 +10,10 @@ import (
 func SetUp() *gin.Engine {
 	r := gin.New()
 	r.Use(logger.GinLogger(), logger.GinRecovery(true))
-
-	r.GET("/", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"info": "ok"})
-	})
+	r.GET("/", controllers.Home)
+	api := r.Group("/api")
+	{
+		api.POST("/user/register", controllers.JsonRegisterUser)
+	}
 	return r
 }
