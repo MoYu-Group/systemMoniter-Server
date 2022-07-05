@@ -11,15 +11,15 @@ import (
 var jwtKey = []byte("systemMoniter-Server")
 
 type JWTClaim struct {
-	Host string `json:"host"`
+	Username string `json:"username"`
 	jwt.StandardClaims
 }
 
-func GenerateJWT(host string, username string) (tokenString string, err error) {
-	zap.L().Info("Create JWT Token: ")
+func GenerateJWT(username string) (tokenString string, err error) {
+	zap.L().Info("开始创建 token: ")
 	expirationTime := time.Now().Add(3 * time.Hour * time.Duration(1))
 	claims := &JWTClaim{
-		Host: host,
+		Username: username,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expirationTime.Unix(),
 			IssuedAt:  time.Now().Unix(), // 签发时间
@@ -28,12 +28,16 @@ func GenerateJWT(host string, username string) (tokenString string, err error) {
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	tokenString, err = token.SignedString(jwtKey)
-	zap.L().Info("Create JWT Finish: " + tokenString)
+	if err != nil {
+		msg := "create token error: " + err.Error()
+		zap.L().Error(msg)
+	}
+	zap.L().Info("create token success: " + tokenString)
 	return
 }
 
 func ValidateToken(signedToken string) (*JWTClaim, error) {
-	zap.L().Info("Validate JWT Token: ")
+	zap.L().Info("Start Validating token : ")
 	token, err := jwt.ParseWithClaims(
 		signedToken,
 		&JWTClaim{},
@@ -43,31 +47,33 @@ func ValidateToken(signedToken string) (*JWTClaim, error) {
 	)
 
 	if err != nil {
-		zap.L().Info("Validate JWT Token Err: ", zap.Error(err))
+		zap.L().Error("Validate token error: ", zap.Error(err))
+		err = errors.New("couldn't parse claims")
 		return nil, err
 	}
 	if token != nil {
 		claims, ok := token.Claims.(*JWTClaim)
 		if !ok {
-			zap.L().Info("Validate JWT Token Err: couldn't parse claims")
+			zap.L().Error("Validate token error: couldn't parse claims")
 			err = errors.New("couldn't parse claims")
 			return nil, err
 		}
 
 		if claims.ExpiresAt < time.Now().Local().Unix() {
-			zap.L().Info("Validate JWT Token Err: token expired")
+			zap.L().Error("Validate token error: token expired")
 			err = errors.New("token expired")
 			return nil, err
 		}
 
 		if token.Valid && ok {
+			zap.L().Info("Validate user " + claims.Username + " 's token success")
 			return claims, nil
 		}
 	} else {
-		zap.L().Info("Validate JWT Token Err: token is null")
+		zap.L().Error("Validate Token error：token invalid")
 	}
 
-	zap.L().Info("Validate JWT Token Err: unknow error")
+	zap.L().Error("Validate Token error：unknow error")
 	return nil, err
 
 }

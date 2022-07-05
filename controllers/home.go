@@ -9,3 +9,7 @@ import (
 func Home(c *gin.Context) {
 	logic.ResponseSuccess(c, string("Welcome to use!"))
 }
+
+func AuthTestPassed(c *gin.Context) {
+	logic.ResponseSuccess(c, string("Auth test passed!"))
+}

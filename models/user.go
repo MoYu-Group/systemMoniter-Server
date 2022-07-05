@@ -11,6 +11,7 @@ type User struct {
 	Id       string `sql:"type:uuid;primary_key;default:uuid_generate_v4()"`
 	User     string `json:"user" binding:"required"`
 	Password string `json:"password" binding:"required"`
+	Typed    string `default:"node"`
 }
 
 func (user *User) BeforeCreate(tx *gorm.DB) (err error) {

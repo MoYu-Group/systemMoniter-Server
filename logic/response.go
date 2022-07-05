@@ -4,6 +4,7 @@ package logic
 
 import (
 	"encoding/json"
+	"systemMoniter-Server/common"
 
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
@@ -34,7 +35,7 @@ func ResponseError(c *gin.Context, code ResponseCode, err error) {
 }
 
 func ResponseSuccess(c *gin.Context, data interface{}) {
-	resp := &Response{ErrorCode: SuccessCode, ErrorMsg: "", Data: data}
+	resp := &Response{ErrorCode: ResponseCode(common.OK.Code), ErrorMsg: "", Data: data}
 	c.JSON(200, resp)
 	response, err := json.Marshal(resp)
 	if err != nil {

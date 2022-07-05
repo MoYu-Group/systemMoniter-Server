@@ -25,7 +25,9 @@ network: # 服务器端三网 ping 测试
   cu: "120.52.99.224"
   ct: "183.78.182.66"
   cm: "211.139.145.129"
-  interval: 1 # ping 三网时间，0 为禁ping
-
+  interval: 1 # ping 三网时间，0 为禁ping，分钟
+sysadmin:
+  user: "sys"
+  password: "$2a$14$bYF334rdA/FP1R60MIBV4uD/3b8js6LVC6OxncCoMxLu8mwmhywOG" #123456
 
    

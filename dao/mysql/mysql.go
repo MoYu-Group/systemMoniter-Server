@@ -2,6 +2,7 @@ package mysql
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 	"systemMoniter-Server/models"
 
@@ -45,6 +46,21 @@ func Migrate() {
 }
 
 func InsertUser(user *models.User) error {
+	result1 := db.Where("user = ?", user.User).First(&user)
+	if result1.RowsAffected > 0 {
+		err := errors.New("Duplicate user find")
+		return err
+	}
+
 	result := db.Create(user)
+	return result.Error
+}
+
+func FindUser(username string, user *models.User) error {
+	result := db.Where("user = ?", username).First(&user)
+	if result.RowsAffected <= 0 {
+		err := errors.New("No user find")
+		return err
+	}
 	return result.Error
 }
