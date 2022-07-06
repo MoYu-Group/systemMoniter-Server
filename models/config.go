@@ -22,30 +22,27 @@ type Config struct {
 	porbeport int
 }
 
-func NewConfig() Config {
-	return Config{
-		interval:  Interval,
-		cu:        Cu,
-		ct:        Ct,
-		cm:        Cm,
-		isOpen:    IsOpen,
-		porbeport: Porbeport,
-	}
-}
+// func NewConfig() Config {
+// 	return Config{
+// 		interval:  Interval,
+// 		cu:        Cu,
+// 		ct:        Ct,
+// 		cm:        Cm,
+// 		isOpen:    IsOpen,
+// 		porbeport: Porbeport,
+// 	}
+// }
 
-func SetConfig() Config {
-	interval := viper.GetInt("network.interval")
-	isOpen := false
-	if interval > 0 {
-		isOpen = true
+func SetConfig() {
+	Interval = viper.GetInt("network.interval")
+	IsOpen = false
+	if Interval > 0 {
+		IsOpen = true
 	} else {
-		isOpen = false
+		IsOpen = false
 	}
-	return Config{
-		interval: interval,
-		cu:       viper.GetString("network.cu"),
-		ct:       viper.GetString("network.ct"),
-		cm:       viper.GetString("network.cm"),
-		isOpen:   isOpen,
-	}
+	Cu = viper.GetString("network.cu") + ":" + viper.GetString("network.port")
+	Ct = viper.GetString("network.ct") + ":" + viper.GetString("network.port")
+	Cm = viper.GetString("network.cm") + ":" + viper.GetString("network.port")
+
 }

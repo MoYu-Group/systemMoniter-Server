@@ -14,6 +14,7 @@ func SetUp() *gin.Engine {
 	r.GET("/", controllers.Home)
 	api := r.Group("/api/")
 	{
+		api.POST("/local", controllers.Local)
 		api.POST("/user/register", controllers.JsonRegisterUser)
 		api.POST("/user/login", controllers.JsonLogin)
 		api.Use(logic.Auth())

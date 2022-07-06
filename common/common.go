@@ -22,12 +22,12 @@ func IsIPEqual(ipAddr1 string, ipAddr2 string) bool {
 	return ip1 != nil && ip2 != nil && ip1.Equal(ip2)
 }
 
-func str2bytes(s string) []byte {
+func Str2bytes(s string) []byte {
 	x := (*[2]uintptr)(unsafe.Pointer(&s))
 	b := [3]uintptr{x[0], x[1], x[1]}
 	return *(*[]byte)(unsafe.Pointer(&b))
 }
 
-func bytes2str(b []byte) string {
+func Bytes2str(b []byte) string {
 	return *(*string)(unsafe.Pointer(&b))
 }

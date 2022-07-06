@@ -21,3 +21,12 @@ func (node *Node) BeforeCreate(tx *gorm.DB) (err error) {
 	node.Id = uuid.New().String()
 	return
 }
+
+func NewDefaultNode() Node {
+	return Node{
+		Disabled: false,
+		Location: "Unknow",
+		Host:     "Unknow",
+		Type:     "Unknow",
+	}
+}
