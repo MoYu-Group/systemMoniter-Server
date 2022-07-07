@@ -37,4 +37,7 @@ var (
 	ErrUsernameOrPasswordIncorrect = &Errno{Errord: errors.New("ErrUsernameOrPasswordIncorrect"), Code: 20302, Message: "用户名或密码错误"}
 	ErrDuplicateUserFound          = &Errno{Errord: errors.New("ErrDuplicateUserFound"), Code: 20303, Message: "重复用户"}
 	ErrCreateUser                  = &Errno{Errord: errors.New("ErrCreateUser"), Code: 20304, Message: "创建用户失败"}
+	// 节点错误，前缀为 204
+	ErrCreateNode         = &Errno{Errord: errors.New("ErrCreateNode"), Code: 20401, Message: "创建节点失败"}
+	ErrDuplicateNodeFound = &Errno{Errord: errors.New("ErrDuplicateNodeFound"), Code: 20303, Message: "重复节点"}
 )

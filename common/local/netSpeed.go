@@ -55,14 +55,14 @@ func (netSpeed *NetSpeed) Start() {
 					//fmt.Println(time.Now().Format("2006-01-02 15:04:05")," Get network speed error:",err)
 				}
 				for _, v := range netInfo {
-					if strings.Index(v.Name, "lo") > -1 ||
-						strings.Index(v.Name, "tun") > -1 ||
-						strings.Index(v.Name, "docker") > -1 ||
-						strings.Index(v.Name, "veth") > -1 ||
-						strings.Index(v.Name, "br-") > -1 ||
-						strings.Index(v.Name, "vmbr") > -1 ||
-						strings.Index(v.Name, "vnet") > -1 ||
-						strings.Index(v.Name, "kube") > -1 {
+					if strings.Contains(v.Name, "lo") ||
+						strings.Contains(v.Name, "tun") ||
+						strings.Contains(v.Name, "docker") ||
+						strings.Contains(v.Name, "veth") ||
+						strings.Contains(v.Name, "br-") ||
+						strings.Contains(v.Name, "vmbr") ||
+						strings.Contains(v.Name, "vnet") ||
+						strings.Contains(v.Name, "kube") {
 						continue
 					}
 					bytesSent += v.BytesSent

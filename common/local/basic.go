@@ -139,14 +139,14 @@ func trafficCount() {
 	var bytesSent uint64 = 0
 	var bytesRecv uint64 = 0
 	for _, v := range netInfo {
-		if strings.Index(v.Name, "lo") > -1 ||
-			strings.Index(v.Name, "tun") > -1 ||
-			strings.Index(v.Name, "docker") > -1 ||
-			strings.Index(v.Name, "veth") > -1 ||
-			strings.Index(v.Name, "br-") > -1 ||
-			strings.Index(v.Name, "vmbr") > -1 ||
-			strings.Index(v.Name, "vnet") > -1 ||
-			strings.Index(v.Name, "kube") > -1 {
+		if strings.Contains(v.Name, "lo") ||
+			strings.Contains(v.Name, "tun") ||
+			strings.Contains(v.Name, "docker") ||
+			strings.Contains(v.Name, "veth") ||
+			strings.Contains(v.Name, "br-") ||
+			strings.Contains(v.Name, "vmbr") ||
+			strings.Contains(v.Name, "vnet") ||
+			strings.Contains(v.Name, "kube") {
 			continue
 		}
 		bytesSent += v.BytesSent
@@ -164,21 +164,20 @@ func spaceCount() {
 	for _, d := range diskList {
 		fsType := strings.ToLower(d.Fstype)
 		//fmt.Println(d.Fstype)
-		if strings.Index(fsType, "ext4") < 0 &&
-			strings.Index(fsType, "ext3") < 0 &&
-			strings.Index(fsType, "ext2") < 0 &&
-			strings.Index(fsType, "reiserfs") < 0 &&
-			strings.Index(fsType, "jfs") < 0 &&
-			strings.Index(fsType, "btrfs") < 0 &&
-			strings.Index(fsType, "fuseblk") < 0 &&
-			strings.Index(fsType, "zfs") < 0 &&
-			strings.Index(fsType, "simfs") < 0 &&
-			strings.Index(fsType, "ntfs") < 0 &&
-			strings.Index(fsType, "fat32") < 0 &&
-			strings.Index(fsType, "exfat") < 0 &&
-			strings.Index(fsType, "xfs") < 0 {
+		if !strings.Contains(fsType, "ext4") &&
+			!strings.Contains(fsType, "ext2") &&
+			!strings.Contains(fsType, "reiserfs") &&
+			!strings.Contains(fsType, "jfs") &&
+			!strings.Contains(fsType, "btrfs") &&
+			!strings.Contains(fsType, "fuseblk") &&
+			!strings.Contains(fsType, "zfs") &&
+			!strings.Contains(fsType, "simfs") &&
+			!strings.Contains(fsType, "ntfs") &&
+			!strings.Contains(fsType, "fat32") &&
+			!strings.Contains(fsType, "exfat") &&
+			!strings.Contains(fsType, "xfs") {
 		} else {
-			if strings.Index(d.Device, "Z:") > -1 { //特殊盘符自己写处理
+			if strings.Contains(d.Device, "Z:") { //特殊盘符自己写处理
 				continue
 			} else {
 				diskUsageOf, _ := disk.Usage(d.Mountpoint)

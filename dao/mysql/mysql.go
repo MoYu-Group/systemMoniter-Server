@@ -64,3 +64,32 @@ func FindUser(username string, user *models.User) error {
 	}
 	return result.Error
 }
+
+func FindUserByUid(uid string, user *models.User) error {
+	result := db.Where("id = ?", uid).First(&user)
+	if result.RowsAffected <= 0 {
+		err := errors.New("No user find")
+		return err
+	}
+	return result.Error
+}
+
+func InsertNode(node *models.Node) error {
+	result1 := db.Where("name = ? and host = ?", node.Name, node.Host).First(&node)
+	if result1.RowsAffected > 0 {
+		err := errors.New("Duplicate node find")
+		return err
+	}
+
+	result := db.Create(node)
+	return result.Error
+}
+
+func FindNode(name string, host string, node *models.Node) error {
+	result := db.Where("name = ? and host = ?", name, host).First(&node)
+	if result.RowsAffected <= 0 {
+		err := errors.New("No node find")
+		return err
+	}
+	return result.Error
+}

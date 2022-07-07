@@ -35,6 +35,7 @@ type Info struct {
 	Uptime      uint64  `json:"uptime"`
 	HddTotal    uint64  `json:"hdd_total"`
 	HddUsed     uint64  `json:"hdd_used"`
+	isLatest    bool    `json:"is_latest"`
 }
 
 type Status struct {
@@ -100,6 +101,7 @@ func NewDefaultInfo() Info {
 		Uptime:      0,
 		HddTotal:    0,
 		HddUsed:     0,
+		isLatest:    false,
 	}
 }
 
