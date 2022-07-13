@@ -46,18 +46,18 @@ func Migrate() {
 }
 
 func InsertUser(user *models.User) error {
-	result1 := db.Where("user = ?", user.User).First(&user)
+	result1 := db.Model(&models.User{}).Where("user = ?", user.User).First(&user)
 	if result1.RowsAffected > 0 {
 		err := errors.New("Duplicate user find")
 		return err
 	}
 
-	result := db.Create(user)
+	result := db.Model(&models.User{}).Create(user)
 	return result.Error
 }
 
 func FindUser(username string, user *models.User) error {
-	result := db.Where("user = ?", username).First(&user)
+	result := db.Model(&models.User{}).Where("user = ?", username).First(&user)
 	if result.RowsAffected <= 0 {
 		err := errors.New("No user find")
 		return err
@@ -66,7 +66,7 @@ func FindUser(username string, user *models.User) error {
 }
 
 func FindUserByUid(uid string, user *models.User) error {
-	result := db.Where("id = ?", uid).First(&user)
+	result := db.Model(&models.User{}).Where("id = ?", uid).First(&user)
 	if result.RowsAffected <= 0 {
 		err := errors.New("No user find")
 		return err
@@ -75,21 +75,103 @@ func FindUserByUid(uid string, user *models.User) error {
 }
 
 func InsertNode(node *models.Node) error {
-	result1 := db.Where("name = ? and host = ?", node.Name, node.Host).First(&node)
+	result1 := db.Model(&models.Node{}).Where("name = ? and host = ?", node.Name, node.Host).First(&node)
+	fmt.Println(result1.RowsAffected)
 	if result1.RowsAffected > 0 {
 		err := errors.New("Duplicate node find")
 		return err
 	}
-
 	result := db.Create(node)
 	return result.Error
 }
 
-func FindNode(name string, host string, node *models.Node) error {
-	result := db.Where("name = ? and host = ?", name, host).First(&node)
+func FindNodeByNameAndHost(name string, host string, node *models.Node) error {
+	result := db.Model(&models.Node{}).Where("name = ? and host = ?", name, host).First(&node)
 	if result.RowsAffected <= 0 {
 		err := errors.New("No node find")
 		return err
 	}
+	if node.Disabled == true {
+		err := errors.New("Node is disabled")
+		return err
+	}
 	return result.Error
+}
+
+func FindNodeByID(id string, node *models.Node) error {
+	result := db.Model(&models.Node{}).Where("id = ? ", id).First(&node)
+	if result.RowsAffected <= 0 {
+		err := errors.New("No node find")
+		return err
+	}
+	if node.Disabled == true {
+		err := errors.New("Node is disabled")
+		return err
+	}
+	return result.Error
+}
+
+func InsertInfoByNameAndHost(name string, host string, info *models.Info) error {
+	var node models.Node
+	result := db.Model(&models.Node{}).Where("name = ? and host = ?", name, host).First(&node)
+	if result.RowsAffected <= 0 {
+		err := errors.New("No node find")
+		return err
+	}
+	if node.Id == "" {
+		err := errors.New("No node find")
+		return err
+	}
+	if node.Disabled == true {
+		err := errors.New("Node is disabled")
+		return err
+	}
+	db.Model(&models.Info{}).Where("node_id = ?", node.Id).Update("is_latest", false)
+	info.NodeId = node.Id
+	result2 := db.Create(info)
+	return result2.Error
+}
+
+func InsertInfoByNodeID(nodeID string, info *models.Info) error {
+	var node models.Node
+	result := db.Model(&models.Node{}).Where("node_id = ?").First(&node)
+	if result.RowsAffected <= 0 {
+		err := errors.New("No node find")
+		return err
+	}
+	if node.Id == "" {
+		err := errors.New("No node find")
+		return err
+	}
+	if node.Disabled == true {
+		err := errors.New("Node is disabled")
+		return err
+	}
+	db.Model(&models.Info{}).Where("node_id = ?", nodeID).Update("is_latest", false)
+	result2 := db.Create(info)
+	return result2.Error
+}
+
+func FindNodeIDByNameAndHost(name string, host string) (error, string) {
+	var node models.Node
+	result := db.Model(&models.Node{}).Where("name = ? and host = ?", name, host).First(&node)
+	if result.RowsAffected <= 0 {
+		err := errors.New("No node find")
+		return err, ""
+	}
+	if node.Id == "" {
+		err := errors.New("No node find")
+		return err, ""
+	}
+	if node.Disabled == true {
+		err := errors.New("Node is disabled")
+		return err, ""
+	}
+	return nil, node.Id
+}
+
+func FindAllNodeStatus() (error, []models.Status) {
+	var allNodeStatus []models.Status
+	result := db.Raw("SELECT n.name,n.type,n.host,n.location,n.disabled, i.* FROM `nodes` as n left JOIN `infos` as i on n.id = i.node_id ORDER BY lastest_time DESC").Scan(&allNodeStatus)
+	return result.Error, allNodeStatus
 }

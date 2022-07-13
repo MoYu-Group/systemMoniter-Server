@@ -16,7 +16,7 @@ type JWTClaim struct {
 }
 
 func GenerateJWT(username string) (tokenString string, err error) {
-	zap.L().Info("开始创建 token: ")
+	zap.L().Info("Start create token: ")
 	expirationTime := time.Now().Add(3 * time.Hour * time.Duration(1))
 	claims := &JWTClaim{
 		Username: username,

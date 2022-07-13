@@ -13,16 +13,15 @@ func SetUp() *gin.Engine {
 	r.Use(logger.GinLogger(), logger.GinRecovery(true))
 	r.GET("/", controllers.Home)
 	api := r.Group("/api/")
+	api.POST("/user/login", controllers.JsonLogin)
+	api.GET("/node/allStatus", controllers.GetAllNodeStatus)
+	api.Use(logic.Auth())
 	{
-		api.POST("/node/local", controllers.Local)
+		//api.GET("/node/local", controllers.Local)
+		api.POST("/node/saveStatus", controllers.JsonStatus)
 		api.POST("/node/register", controllers.JsonRegisterNode)
 		api.POST("/user/register", controllers.JsonRegisterUser)
-		api.POST("/user/login", controllers.JsonLogin)
-		api.Use(logic.Auth())
-		{
-			api.POST("/auth", controllers.AuthTestPassed)
-		}
-
+		api.GET("/auth", controllers.AuthTestPassed)
 	}
 	return r
 }

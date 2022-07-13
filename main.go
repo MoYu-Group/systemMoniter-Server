@@ -8,7 +8,6 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
-	"systemMoniter-Server/common/local"
 	"systemMoniter-Server/dao/mysql"
 	"systemMoniter-Server/logger"
 	"systemMoniter-Server/models"
@@ -21,6 +20,9 @@ import (
 )
 
 func main() {
+	//设置东八中文时区
+	var cstZone = time.FixedZone("CST", 8*3600) // 东八
+	time.Local = cstZone
 	//1.加载配置文件
 	if err := settings.Init(); err != nil {
 		fmt.Printf("init settings failed err:%v\n", err)
@@ -46,24 +48,24 @@ func main() {
 	// defer redis.Close()
 	//5.注册路由
 	models.SetConfig()
-	basic := local.NewBasic()
-	basic.Start()
-	defer basic.Stop()
-	netSpeed := local.NewNetSpeed()
-	netSpeed.Start()
-	defer netSpeed.Stop()
-	if models.IsOpen == true {
-		local.PingValue.IpStatus = false
-		p10086 := local.NewPing()
-		defer p10086.Stop()
-		p10086.RunCM()
-		p10010 := local.NewPing()
-		defer p10010.Stop()
-		p10010.RunCU()
-		p189 := local.NewPing()
-		defer p189.Stop()
-		p189.RunCT()
-	}
+	// basic := local.NewBasic()
+	// basic.Start()
+	// defer basic.Stop()
+	// netSpeed := local.NewNetSpeed()
+	// netSpeed.Start()
+	// defer netSpeed.Stop()
+	// if models.IsOpen == true {
+	// 	local.PingValue.IpStatus = false
+	// 	p10086 := local.NewPing()
+	// 	defer p10086.Stop()
+	// 	p10086.RunCM()
+	// 	p10010 := local.NewPing()
+	// 	defer p10010.Stop()
+	// 	p10010.RunCU()
+	// 	p189 := local.NewPing()
+	// 	defer p189.Stop()
+	// 	p189.RunCT()
+	// }
 
 	r := routes.SetUp()
 

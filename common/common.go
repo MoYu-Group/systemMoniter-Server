@@ -8,12 +8,12 @@ import (
 
 func IsIPv4(ipAddr string) bool {
 	ip := net.ParseIP(ipAddr)
-	return ip != nil && strings.Contains(ipAddr, ".")
+	return ip != nil && strings.Count(ipAddr, ".") >= 2
 }
 
 func IsIPv6(ipAddr string) bool {
 	ip := net.ParseIP(ipAddr)
-	return ip != nil && strings.Contains(ipAddr, ":")
+	return ip != nil && strings.Count(ipAddr, ":") >= 2
 }
 
 func IsIPEqual(ipAddr1 string, ipAddr2 string) bool {

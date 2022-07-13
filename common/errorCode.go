@@ -39,5 +39,12 @@ var (
 	ErrCreateUser                  = &Errno{Errord: errors.New("ErrCreateUser"), Code: 20304, Message: "创建用户失败"}
 	// 节点错误，前缀为 204
 	ErrCreateNode         = &Errno{Errord: errors.New("ErrCreateNode"), Code: 20401, Message: "创建节点失败"}
-	ErrDuplicateNodeFound = &Errno{Errord: errors.New("ErrDuplicateNodeFound"), Code: 20303, Message: "重复节点"}
+	ErrDuplicateNodeFound = &Errno{Errord: errors.New("ErrDuplicateNodeFound"), Code: 20402, Message: "重复节点"}
+	ErrNodeIsDisabled     = &Errno{Errord: errors.New("ErrNodeIsDisabled"), Code: 20403, Message: "节点失效"}
+	ErrNodeNotFound       = &Errno{Errord: errors.New("ErrNodeNotFound"), Code: 20404, Message: "节点未找到"}
+	// 添加状态错误，前缀 205
+	ErrCreateStatus = &Errno{Errord: errors.New("ErrCreateStatus"), Code: 20501, Message: "创建节点状态失败"}
+	ErrLostNodeInfo = &Errno{Errord: errors.New("ErrLostNodeInfo"), Code: 20502, Message: "丢失节点信息"}
+	// 查询节点错误，前缀 206
+	ErrFindAllNodeInfo = &Errno{Errord: errors.New("ErrFindAllNodeInfo"), Code: 20601, Message: "查询所有节点失败"}
 )

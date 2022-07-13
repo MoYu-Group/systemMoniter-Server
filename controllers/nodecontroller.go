@@ -6,18 +6,31 @@ import (
 	"systemMoniter-Server/dao/mysql"
 	"systemMoniter-Server/logic"
 	"systemMoniter-Server/models"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 )
+
+func GetAllNodeStatus(c *gin.Context) {
+	err, servers := mysql.FindAllNodeStatus()
+	if err != nil {
+		msg := "Find all node status error: "
+		zap.L().Error(msg, zap.Error(err))
+		logic.ResponseError(c, logic.ResponseCode(common.ErrFindAllNodeInfo.Code), common.ErrFindAllNodeInfo.Errord)
+		c.Abort()
+		return
+	}
+	c.JSON(200, gin.H{"servers": servers, "updated": time.Now().Unix()})
+}
 
 func Local(c *gin.Context) {
 	info := models.NewDefaultStatus()
 	info.Load1 = local.GetBasic.Load1
 	info.Load5 = local.GetBasic.Load5
 	info.Load15 = local.GetBasic.Load15
-	info.Thread = local.GetBasic.Thread
-	info.Process = local.GetBasic.Process
+	info.ThreadCount = local.GetBasic.Thread
+	info.ProcessCount = local.GetBasic.Process
 	info.NetworkTx = local.GetNetSpeed.Avgtx
 	info.NetworkRx = local.GetNetSpeed.Avgrx
 	info.NetworkIn = uint64(local.GetNetSpeed.Nettx)
@@ -28,9 +41,9 @@ func Local(c *gin.Context) {
 	info.Time10010 = local.PingValue.Time10010
 	info.Time10086 = local.PingValue.Time10086
 	info.Time189 = local.PingValue.Time189
-	info.TCP = local.GetBasic.TCP
-	info.UDP = local.GetBasic.UDP
-	info.CPU = local.GetBasic.CPU
+	info.TCPCount = local.GetBasic.TCP
+	info.UDPCount = local.GetBasic.UDP
+	info.CPUCount = local.GetBasic.CPU
 	info.MemoryTotal = local.GetBasic.MemoryTotal
 	info.MemoryUsed = local.GetBasic.MemoryUsed
 	info.SwapTotal = local.GetBasic.SwapTotal
@@ -67,12 +80,20 @@ func JsonRegisterNode(context *gin.Context) {
 		Type:     nodeData.Type,
 		Host:     nodeData.Host,
 		Location: nodeData.Location,
+		Custom:   nodeData.Custom,
+		Disabled: false,
 	}
 	err2 := mysql.InsertNode(&node)
-	if err2 != nil {
-		msg := "Create Node " + nodeData.Name + "error: no user find"
-		logic.ResponseError(context, logic.ResponseCode(common.ErrDuplicateNodeFound.Code), common.ErrDuplicateNodeFound.Errord)
+	if err2 != nil && err2.Error() == "Duplicate node find" {
+		msg := "Create Node " + node.Name + " error: Duplicate node find"
 		zap.L().Error(msg)
+		logic.ResponseError(context, logic.ResponseCode(common.ErrDuplicateNodeFound.Code), common.ErrDuplicateNodeFound.Errord)
+		context.Abort()
+		return
+	} else if err2 != nil {
+		msg := "Create Node " + node.Name + " error: "
+		zap.L().Error(msg, zap.Error(err))
+		logic.ResponseError(context, logic.ResponseCode(common.ErrCreateStatus.Code), common.ErrCreateStatus.Errord)
 		context.Abort()
 		return
 	}
