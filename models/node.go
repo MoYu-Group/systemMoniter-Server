@@ -10,7 +10,7 @@ type Node struct {
 	Id       string `sql:"type:uuid;primary_key;default:uuid_generate_v4()"`
 	Name     string `json:"name" gorm:"unique"`
 	Uid      string `sql:"type:uuid`
-	Type     string `json:"types"`
+	Type     string `json:"type"`
 	Host     string `json:"host" gorm:"unique"`
 	Location string `json:"location"`
 	Disabled bool   `json:"disabled"`

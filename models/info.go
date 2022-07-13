@@ -46,7 +46,7 @@ type Info struct {
 
 type Status struct {
 	NodeId       string  `json:"node_id" `
-	Type         string  `json:"types"`
+	Type         string  `json:"type"`
 	Location     string  `json:"location"`
 	Disabled     bool    `json:"disabled"`
 	Custom       string  `json:"custom"`
