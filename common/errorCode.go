@@ -31,7 +31,7 @@ var (
 	// 认证错误, 前缀是 202
 	ErrValidation   = &Errno{Errord: errors.New("ErrValidation"), Code: 20201, Message: "验证失败"}
 	ErrTokenInvalid = &Errno{Errord: errors.New("ErrTokenInvalid"), Code: 20202, Message: "jwt 是无效的"}
-	ErrTokenExpired = &Errno{Errord: errors.New("ErrTokenExpired"), Code: 20202, Message: "jwt 是过期的"}
+	ErrTokenExpired = &Errno{Errord: errors.New("ErrTokenExpired"), Code: 20203, Message: "jwt 是过期的"}
 	// 用户错误, 前缀为 203
 	ErrUserNotFound                = &Errno{Errord: errors.New("ErrUserNotFound"), Code: 20301, Message: "用户没找到"}
 	ErrUsernameOrPasswordIncorrect = &Errno{Errord: errors.New("ErrUsernameOrPasswordIncorrect"), Code: 20302, Message: "用户名或密码错误"}

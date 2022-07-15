@@ -1,9 +1,12 @@
 # systemMoniter-Server
 Golang 写的系统资源监控服务器端
 
+使用 Golang 开发，MySQL 存储
+使用框架依赖库 Gin，Zap，Gorm，gopsutil
+
 开发项目，只是写着玩的，方便自用，请不要商用！
 
-客户端正在开发中。
+客户端 [systemMoniter-Node](https://github.com/MoYu-Group/systemMoniter-Node)
 
 ## 简要接口说明
 
@@ -221,14 +224,15 @@ GET `http://localhost:8085/api/node/allStatus`
 
 ## TODO
 
-- 客户端撰写 [systemMoniter-Node](https://github.com/MoYu-Group/systemMoniter-Node)
+- 客户端撰写
 - 完善的鉴权角色系统
 - 前端管理系统
 - 代码标准化改进
 
 ## 鸣谢
 
-* ServerStatus：https://github.com/BotoX/ServerStatus
+* cppla 的 ServerStatus: https://github.com/cppla/ServerStatus
+* ServerStatus: https://github.com/BotoX/ServerStatus
 * mojeda: https://github.com/mojeda 
 * mojeda's ServerStatus: https://github.com/mojeda/ServerStatus
 * BlueVM's project: http://www.lowendtalk.com/discussion/comment/169690#Comment_169690
