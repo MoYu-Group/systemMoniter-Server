@@ -21,6 +21,19 @@ func GetAllNodeStatus(c *gin.Context) {
 		c.Abort()
 		return
 	}
+
+	// for _, i := range servers {
+	// 	cpu := i.CPU
+	// 	i.CPU = float64(math.Ceil(cpu))
+	// 	// uptime := int(i.Uptime)
+	// 	// i.Uptime = fmt.Sprintln("%d天%d小时%d分%d秒\n",
+	// 	// 	uptime/60/60/24%365,
+	// 	// 	uptime/60/60%24,
+	// 	// 	uptime/60%60,
+	// 	// 	uptime%60)
+
+	// }
+
 	c.JSON(200, gin.H{"servers": servers, "updated": time.Now().Unix()})
 }
 
@@ -43,7 +56,7 @@ func Local(c *gin.Context) {
 	info.Time189 = local.PingValue.Time189
 	info.TCPCount = local.GetBasic.TCP
 	info.UDPCount = local.GetBasic.UDP
-	info.CPUCount = local.GetBasic.CPU
+	info.CPU = local.GetBasic.CPU
 	info.MemoryTotal = local.GetBasic.MemoryTotal
 	info.MemoryUsed = local.GetBasic.MemoryUsed
 	info.SwapTotal = local.GetBasic.SwapTotal

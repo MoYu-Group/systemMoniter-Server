@@ -42,7 +42,7 @@ func JsonStatus(context *gin.Context) {
 		Time189:      status.Time189,
 		TCPCount:     status.TCPCount,
 		UDPCount:     status.UDPCount,
-		CPUCount:     status.CPUCount,
+		CPU:          status.CPU,
 		MemoryTotal:  status.MemoryTotal,
 		MemoryUsed:   status.MemoryUsed,
 		SwapTotal:    status.SwapTotal,

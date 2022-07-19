@@ -20,7 +20,7 @@
     "time_189": 100,
     "tcp_count": 314,
     "udp_count": 137,
-    "cpu_count": 40.35087719298245,
+    "cpu": 40.35087719298245,
     "memory_total": 16156036,
     "memory_used": 11676376,
     "swap_total": 29263236,

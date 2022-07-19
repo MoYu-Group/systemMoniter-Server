@@ -1,9 +1,9 @@
 name: "systemMoniter-Server" #姓名
-mode: "dev" #模式
+mode: "error" #模式
 port: 8085 #端口
 interval: 10 #储存采样速度，分钟
 log:
-  level: "debug" #日志文件的位置
+  level: "error" #日志文件的位置
   filename: "systemMoniter-Server.log" #文件名字
   max_size: 200 #在进行切割之前，日志文件的最大大小（以MB为单位）
   max_age: 30 #保留旧文件的最大天数

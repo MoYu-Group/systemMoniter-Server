@@ -11,7 +11,18 @@ import (
 func SetUp() *gin.Engine {
 	r := gin.New()
 	r.Use(logger.GinLogger(), logger.GinRecovery(true))
-	r.GET("/", controllers.Home)
+	r.Use(logic.Cors())
+	//r.GET("/", controllers.Home)
+	r.Static("/css","./static/css")
+	r.Static("/img","./static/img")
+	r.Static("/js","./static/js")
+	r.LoadHTMLGlob("./static/*.html")
+	r.GET("/",func (c *gin.Context)  {
+		c.HTML(200,"index.html",nil)
+	})
+
+
+
 	api := r.Group("/api/")
 	api.POST("/user/login", controllers.JsonLogin)
 	api.GET("/node/allStatus", controllers.GetAllNodeStatus)
