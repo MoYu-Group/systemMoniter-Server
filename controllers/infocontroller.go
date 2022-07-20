@@ -53,6 +53,10 @@ func JsonStatus(context *gin.Context) {
 		IpStatus:     status.IpStatus,
 		Online4:      isIPv4,
 		Online6:      isIPv6,
+		ThreadCount:  status.ThreadCount,
+		Load1:        status.Load1,
+		Load5:        status.Load5,
+		Load15:       status.Load15,
 	}
 	err := mysql.InsertInfoByNameAndHost(status.Name, status.Host, &info)
 	if err != nil && err.Error() == "Node is disabled" {
