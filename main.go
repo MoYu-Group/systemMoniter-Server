@@ -40,6 +40,10 @@ func main() {
 		return
 	}
 	mysql.Migrate()
+	err := mysql.SetOldNodeStatus()
+	if err != nil {
+		zap.L().Error("Update node status failed")
+	}
 	// //4.初始化Redis连接
 	// if err := redis.Init(); err != nil {
 	// 	fmt.Printf("init redis failed err:%v\n", err)

@@ -126,7 +126,7 @@ func InsertInfoByNameAndHost(name string, host string, info *models.Info) error 
 		err := errors.New("Node is disabled")
 		return err
 	}
-	db.Model(&models.Info{}).Where("node_id = ?", node.Id).Update("is_latest", false)
+	db.Unscoped().Model(&models.Info{}).Where("node_id = ?", node.Id).Delete(&models.Info{})
 	info.NodeId = node.Id
 	result2 := db.Create(info)
 	return result2.Error
@@ -147,7 +147,7 @@ func InsertInfoByNodeID(nodeID string, info *models.Info) error {
 		err := errors.New("Node is disabled")
 		return err
 	}
-	db.Model(&models.Info{}).Where("node_id = ?", nodeID).Update("is_latest", false)
+	db.Unscoped().Model(&models.Info{}).Where("node_id = ?", node.Id).Delete(&models.Info{})
 	result2 := db.Create(info)
 	return result2.Error
 }
@@ -172,6 +172,11 @@ func FindNodeIDByNameAndHost(name string, host string) (error, string) {
 
 func FindAllNodeStatus() (error, []models.Status) {
 	var allNodeStatus []models.Status
-	result := db.Raw("SELECT n.name,n.type,n.host,n.location,n.disabled, i.* FROM `nodes` as n left JOIN `infos` as i on n.id = i.node_id WHERE i.is_latest = true ORDER BY lastest_time DESC").Scan(&allNodeStatus)
+	result := db.Raw("SELECT n.name,n.type,n.host,n.location,n.disabled, i.* FROM `nodes` as n left JOIN `infos` as i on n.id = i.node_id WHERE i.is_latest = true ORDER BY i.node_id").Scan(&allNodeStatus)
 	return result.Error, allNodeStatus
+}
+
+func SetOldNodeStatus() error {
+	result := db.Raw("UPDATE `infos` SET is_latest = false where  unix_timestamp(now()) - unix_timestamp(lastest_time) > ?", 300)
+	return result.Error
 }
